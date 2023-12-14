@@ -1,8 +1,8 @@
 import { Random } from "@woowacourse/mission-utils";
-import ERROR from "./ERROR";
 import InputView from "./InputView";
 import OutputView from "./OutputView";
 import Lotto from "./Lotto";
+import {NUMBER, ERROR}  from "./Constants";
 
 class LottoMachine {
   #winningResult;
@@ -37,39 +37,39 @@ class LottoMachine {
   }
 
   calculateProfit() {
-    const prize = [2000000000, 30000000, 1500000, 50000, 5000];
+    const prize = [NUMBER.first_prize, NUMBER.second_prize, NUMBER.third_prize, NUMBER.fourth_prize, NUMBER.fifth_prize];
     let profit = 0;
-    this.#winningResult.forEach( (result, idx) => {
+    this.#winningResult.forEach((result, idx) => {
       profit += result * prize[idx];
     })
     return profit;
   }
 
-  compareLottoNumber(lottoTickets = [], winningNumber, bonus) {
+  compareLottoNumber(lottoTickets = [], winningNumber = [], bonus = 0) {
     lottoTickets.forEach(lotto => {
       const sameNumberCount = this.findSameNumber(winningNumber, lotto.getLotto(), bonus);
       if (sameNumberCount === 6) {
-        this.#winningResult[0] += 1;
+        this.#winningResult[NUMBER.first] += 1;
       } else if (sameNumberCount === 5) {
-        this.#winningResult[2] += 1;
+        this.#winningResult[NUMBER.third] += 1;
       } else if (sameNumberCount === 4) {
-        this.#winningResult[3] += 1;
+        this.#winningResult[NUMBER.fourth] += 1;
       } else if (sameNumberCount === 3) {
-        this.#winningResult[4] += 1;
+        this.#winningResult[NUMBER.fifth] += 1;
       }
     })
   }
 
-  findSameNumber(winningLotto = [], buyLotto = [], bonus) {
+  findSameNumber(winningLotto = [], buyLotto = [], bonus = 0) {
     const commonElements = winningLotto.filter(element => buyLotto.includes(element));
     if (commonElements.length === 5 && this.checkBonusNumber(buyLotto, bonus)) {
       commonElements.length += 2;
-      this.#winningResult[1] += 1;
+      this.#winningResult[NUMBER.second] += 1;
     }
     return commonElements.length;
   }
 
-  checkBonusNumber(lotto, bonus) {
+  checkBonusNumber(lotto = [], bonus = 0) {
     if (lotto.includes(bonus)) {
       return true;
     }
@@ -79,7 +79,7 @@ class LottoMachine {
   makeLotto(lottoCount = 0) {
     const lottoTickets = [];
     for (let i = 0; i < lottoCount; i += 1) {
-      const numbers = Random.pickUniqueNumbersInRange(1, 45, 6);
+      const numbers = Random.pickUniqueNumbersInRange(NUMBER.start_number, NUMBER.end_number, NUMBER.lotto_number_count);
       lottoTickets.push(new Lotto(numbers));
     }
     return lottoTickets;
@@ -100,13 +100,13 @@ class LottoMachine {
   validateBonus(inputBonus = '') {
     this.validateIsEmpty(inputBonus);
     const bonus = Number(inputBonus);
-    if (bonus < 1 || bonus > 45) {
+    if (bonus < NUMBER.start_number || bonus > NUMBER.end_number) {
       throw new Error(ERROR.bonus);
     }
   }
 
   getTicketsCount(money = 0) {
-    return money / 1000;
+    return money / NUMBER.ticket_price;
   }
 
   async userInputWinningNumber() {
@@ -149,7 +149,7 @@ class LottoMachine {
 
   validateNumber(input = '') {
     const number = Number(input);
-    if (number < 1 || number > 45) {
+    if (number < NUMBER.start_number || number > NUMBER.end_number) {
       throw new Error(ERROR.number);
     }
     return number;
@@ -169,7 +169,7 @@ class LottoMachine {
 
   validateMoney(money = '') {
     this.validateIsEmpty(money);
-    if (money % 1000 !== 0) {
+    if (money % NUMBER.ticket_price !== 0) {
       throw new Error(ERROR.money);
     }
   }

@@ -1,4 +1,4 @@
-import ERROR from "./ERROR";
+import { NUMBER, ERROR } from "./Constants";
 
 class Lotto {
   #numbers;
@@ -10,7 +10,7 @@ class Lotto {
   }
 
   #validate(numbers) {
-    if (numbers.length !== 6) {
+    if (numbers.length !== NUMBER.lotto_number_count) {
       throw new Error("[ERROR] 로또 번호는 6개여야 합니다.");
     }
   }

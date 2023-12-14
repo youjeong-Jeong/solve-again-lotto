@@ -1,8 +1,9 @@
 import { Console } from "@woowacourse/mission-utils";
+import { NUMBER, MESSAGE } from "./Constants";
 
 const OutputView = {
     printBuyMessage(count) {
-        Console.print(`${count}개를 구매했습니다.`);
+        Console.print(`${count}${MESSAGE.buy}`);
     },
 
     printBuyLotto(lottoTickets) {
@@ -12,17 +13,17 @@ const OutputView = {
     },
 
     printWinningResult(winningResult) {
-        Console.print('당첨 통계');
-        Console.print('---');
-        Console.print(`3개 일치 (5,000원) - ${winningResult[4]}개`);
-        Console.print(`4개 일치 (50,000원) - ${winningResult[3]}개`);
-        Console.print(`5개 일치 (1,500,000원) - ${winningResult[2]}개`);
-        Console.print(`5개 일치, 보너스 볼 일치 (30,000,000원) - ${winningResult[1]}개`);
-        Console.print(`6개 일치 (2,000,000,000원) - ${winningResult[0]}개`);
+        Console.print(MESSAGE.statistics);
+        Console.print(MESSAGE.line);
+        Console.print(`${MESSAGE.match_three}${winningResult[NUMBER.fifth]}${MESSAGE.amount}`);
+        Console.print(`${MESSAGE.match_four}${winningResult[NUMBER.fourth]}${MESSAGE.amount}`);
+        Console.print(`${MESSAGE.match_five}${winningResult[NUMBER.third]}${MESSAGE.amount}`);
+        Console.print(`${MESSAGE.match_five_bonus}${winningResult[NUMBER.second]}${MESSAGE.amount}`);
+        Console.print(`${MESSAGE.match_six}${winningResult[NUMBER.first]}${MESSAGE.amount}`);
     },
 
     printRateOfProfit(rangeOfProfit) {
-        Console.print(`총 수익률은 ${rangeOfProfit}%입니다.`)
+        Console.print(`${MESSAGE.start_range_of_profit}${rangeOfProfit}${MESSAGE.end_range_of_profit}`)
     },
 
     printError(error) {
