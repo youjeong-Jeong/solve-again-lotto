@@ -1,18 +1,51 @@
 import ERROR from "./ERROR.js";
 import InputView from "./InputView.js";
-//import OutputView from "./OutputView";
+import OutputView from "./OutputView";
 
 class LottoMachine {
-  constructor() {}
+  #winningNumber;
+
+  constructor() {
+    this.#winningNumber = [];
+  }
 
   async start() {
     const money = await this.userInputMoney();
-    const winningNumber = await this.userInputWinningNumber();
+    this.#winningNumber = await this.userInputWinningNumber();
+    const bonusNumber = await this.userInputBonus();
     const lottoTickets = this.getTicketsCount(money);
-    
-    console.log(money);
-    console.log(winningNumber);
-    console.log(lottoTickets);
+
+    //console.log(money);
+    //console.log(this.#winningNumber);
+    //console.log(bonusNumber);
+    //console.log(lottoTickets);
+  }
+
+  async userInputBonus() {
+    while(true) {
+      try {
+        const inputBonus = await InputView.readBonusNumber();
+        this.validateBonus(inputBonus);
+        return Number(inputBonus);
+      } catch (error) {
+        OutputView.printError(error);
+      }
+    }
+  }
+
+  validateBonus(inputBonus = '') {
+    this.validateIsEmpty(inputBonus);
+    this.validateDuplicateBonus(inputBonus);
+    const bonus = Number(inputBonus);
+    if (bonus < 1 || bonus > 45) {
+      throw new Error(ERROR.bonus);
+    }
+  }
+
+  validateDuplicateBonus(inputBonus = '') {
+    if (this.#winningNumber.includes(Number(inputBonus))) {
+      throw new Error(ERROR.bonus);
+    }
   }
 
   getTicketsCount(money = 0) {
@@ -20,13 +53,19 @@ class LottoMachine {
   }
 
   async userInputWinningNumber() {
-    const winningNumberInput = await InputView.readWinningNumber();
-    this.validateWinningNumber(winningNumberInput);
-    const winningNumber = [];
-    winningNumberInput.split(',').forEach( number => {
-      winningNumber.push(Number(number));
-    })
-    return winningNumber;
+    while (true) {
+      try {
+        const winningNumberInput = await InputView.readWinningNumber();
+        this.validateWinningNumber(winningNumberInput);
+        const winningNumber = [];
+        winningNumberInput.split(',').forEach(number => {
+          winningNumber.push(Number(number));
+        })
+        return winningNumber;
+      } catch (error) {
+        OutputView.printError(error);
+      }
+    }
   }
 
   validateWinningNumber(winningNumber = '') {
@@ -37,7 +76,7 @@ class LottoMachine {
   validateOutOfRange(winningNumber = '') {
     const numbers = winningNumber.split(',');
     const numberList = [];
-    numbers.forEach( number => {
+    numbers.forEach(number => {
       numberList.push(this.validateNumber(number));
     })
     this.validateDuplicate(numberList);
@@ -53,31 +92,27 @@ class LottoMachine {
 
   validateNumber(input = '') {
     const number = Number(input);
-    if(number < 1 || number > 45) {
+    if (number < 1 || number > 45) {
       throw new Error(ERROR.number);
     }
     return number;
   }
 
   async userInputMoney() {
-    const money = await InputView.readPrice();
-    this.validateMoney(money);
-    return Number(money);
-    /*
     while (true) {
       try {
         const money = await InputView.readPrice();
         this.validateMoney(money);
+        return Number(money);
       } catch (error) {
         OutputView.printError(error);
       }
     }
-    */
   }
 
   validateMoney(money = '') {
     this.validateIsEmpty(money);
-    if(money % 1000 !== 0 ) {
+    if (money % 1000 !== 0) {
       throw new Error(ERROR.money);
     }
   }
