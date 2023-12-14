@@ -16,7 +16,8 @@ class LottoMachine {
 
   async start() {
     const money = await this.userInputMoney();
-    this.#winningNumber = await this.userInputWinningNumber();
+    const inputWinningNumber = await this.userInputWinningNumber();
+    this.#winningNumber = inputWinningNumber.getLotto();
     this.#bonus = await this.userInputBonus();
     const lottoCount = this.getTicketsCount(money);
     const lottoTickets = this.makeLotto(lottoCount);
@@ -123,11 +124,11 @@ class LottoMachine {
       try {
         const winningNumberInput = await InputView.readWinningNumber();
         this.validateWinningNumber(winningNumberInput);
-        const winningNumber = [];
+        const winningNumber = []
         winningNumberInput.split(',').forEach(number => {
           winningNumber.push(Number(number));
         })
-        return winningNumber.sort();
+        return new Lotto(winningNumber);
       } catch (error) {
         OutputView.printError(error);
       }
