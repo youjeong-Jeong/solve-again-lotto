@@ -21,12 +21,34 @@ class LottoMachine {
     const lottoCount = this.getTicketsCount(money);
     const lottoTickets = this.makeLotto(lottoCount);
     this.compareLottoNumber(lottoTickets);
+    const profit = this.calculateProfit();
+    const rateOfProfit = this.calculateRateOfProfit(profit, money);
+    this.printResult();
     //console.log(money);
     //console.log(this.#winningNumber);
     //console.log(bonusNumber);
     //console.log(lottoCount);
     //console.log(lottoTickets);
-    console.log(this.#winningResult);
+    //console.log(this.#winningResult);
+    //console.log(rateOfProfit);
+  }
+
+  printResult() {
+    
+  }
+
+  calculateRateOfProfit(profit = 0, money = 0) {
+    const result = (profit - money) / money * 100;
+    return Number(result.toFixed(1));
+  }
+
+  calculateProfit() {
+    const prize = [2000000000, 30000000, 1500000, 50000, 5000];
+    let profit = 0;
+    this.#winningResult.forEach( (result, idx) => {
+      profit += result * prize[idx];
+    })
+    return profit;
   }
 
   compareLottoNumber(lottoTickets = []) {
