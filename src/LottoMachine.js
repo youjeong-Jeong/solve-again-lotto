@@ -1,6 +1,8 @@
+import { Random } from "@woowacourse/mission-utils";
 import ERROR from "./ERROR.js";
 import InputView from "./InputView.js";
-import OutputView from "./OutputView";
+import OutputView from "./OutputView.js";
+import Lotto from "./Lotto.js";
 
 class LottoMachine {
   #winningNumber;
@@ -13,12 +15,23 @@ class LottoMachine {
     const money = await this.userInputMoney();
     this.#winningNumber = await this.userInputWinningNumber();
     const bonusNumber = await this.userInputBonus();
-    const lottoTickets = this.getTicketsCount(money);
+    const lottoCount = this.getTicketsCount(money);
+    const lottoTickets = this.makeLotto(lottoCount);
 
     //console.log(money);
     //console.log(this.#winningNumber);
     //console.log(bonusNumber);
+    //console.log(lottoCount);
     //console.log(lottoTickets);
+  }
+
+  makeLotto(lottoCount) {
+    const lottoTickets = [];
+    for( let i = 0; i < lottoCount; i += 1) {
+      const numbers = Random.pickUniqueNumbersInRange(1, 45, 6);
+      lottoTickets.push(new Lotto(numbers));
+    }
+    return lottoTickets;
   }
 
   async userInputBonus() {
