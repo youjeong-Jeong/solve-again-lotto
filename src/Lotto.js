@@ -1,8 +1,11 @@
+import ERROR from "./ERROR";
+
 class Lotto {
   #numbers;
 
   constructor(numbers) {
     this.#validate(numbers);
+    this.#validateDuplicate(numbers);
     this.#numbers = numbers;
   }
 
@@ -12,8 +15,16 @@ class Lotto {
     }
   }
 
+  #validateDuplicate(numberList = '') {
+    const list = [...numberList];
+    const uniqueValues = [...new Set(list)];
+    if (uniqueValues.length !== list.length) {
+      throw new Error(ERROR.number);
+    }
+  }
+
   getLotto() {
-    return this.#numbers;
+    return this.#numbers.sort((a, b) => a - b);
   }
 }
 
