@@ -1,8 +1,8 @@
 import { Random } from "@woowacourse/mission-utils";
-import ERROR from "./ERROR.js";
-import InputView from "./InputView.js";
-import OutputView from "./OutputView.js";
-import Lotto from "./Lotto.js";
+import ERROR from "./ERROR";
+import InputView from "./InputView";
+import OutputView from "./OutputView";
+import Lotto from "./Lotto";
 
 class LottoMachine {
   #winningNumber;

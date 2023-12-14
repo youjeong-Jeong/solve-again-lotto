@@ -1,4 +1,4 @@
-import LottoMachine from "./LottoMachine.js";
+import LottoMachine from "./LottoMachine";
 
 class App {
   async play() {
