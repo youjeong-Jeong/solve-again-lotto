@@ -24,13 +24,6 @@ class LottoMachine {
     const profit = this.calculateProfit();
     const rateOfProfit = this.calculateRateOfProfit(profit, money);
     this.printResult(lottoCount, lottoTickets, rateOfProfit);
-    //console.log(money);
-    //console.log(this.#winningNumber);
-    //console.log(bonusNumber);
-    //console.log(lottoCount);
-    //console.log(lottoTickets);
-    //console.log(this.#winningResult);
-    //console.log(rateOfProfit);
   }
 
   printResult(lottoCount, lottoTickets, rateOfProfit) {
