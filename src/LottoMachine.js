@@ -23,7 +23,7 @@ class LottoMachine {
     this.compareLottoNumber(lottoTickets);
     const profit = this.calculateProfit();
     const rateOfProfit = this.calculateRateOfProfit(profit, money);
-    this.printResult();
+    this.printResult(lottoCount, lottoTickets, rateOfProfit);
     //console.log(money);
     //console.log(this.#winningNumber);
     //console.log(bonusNumber);
@@ -33,12 +33,15 @@ class LottoMachine {
     //console.log(rateOfProfit);
   }
 
-  printResult() {
-    
+  printResult(lottoCount, lottoTickets, rateOfProfit) {
+    OutputView.printBuyMessage(lottoCount);
+    OutputView.printBuyLotto(lottoTickets);
+    OutputView.printWinningResult(this.#winningResult);
+    OutputView.printRateOfProfit(rateOfProfit);
   }
 
   calculateRateOfProfit(profit = 0, money = 0) {
-    const result = (profit - money) / money * 100;
+    const result = profit / money * 100;
     return Number(result.toFixed(1));
   }
 
@@ -131,7 +134,7 @@ class LottoMachine {
         winningNumberInput.split(',').forEach(number => {
           winningNumber.push(Number(number));
         })
-        return winningNumber;
+        return winningNumber.sort();
       } catch (error) {
         OutputView.printError(error);
       }
