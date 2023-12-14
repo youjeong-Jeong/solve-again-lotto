@@ -23,7 +23,7 @@ const OutputView = {
     },
 
     printRateOfProfit(rangeOfProfit) {
-        Console.print(`${MESSAGE.start_range_of_profit}${rangeOfProfit}${MESSAGE.end_range_of_profit}`)
+        Console.print(`${MESSAGE.start_range_of_profit}${Intl.NumberFormat().format(rangeOfProfit)}${MESSAGE.end_range_of_profit}`)
     },
 
     printError(error) {
