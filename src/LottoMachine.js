@@ -5,23 +5,20 @@ import OutputView from "./OutputView";
 import Lotto from "./Lotto";
 
 class LottoMachine {
-  #winningNumber;
   #winningResult;
-  #bonus;
 
   constructor() {
-    this.#winningNumber = [];
     this.#winningResult = [0, 0, 0, 0, 0];
   }
 
   async start() {
     const money = await this.userInputMoney();
     const inputWinningNumber = await this.userInputWinningNumber();
-    this.#winningNumber = inputWinningNumber.getLotto();
-    this.#bonus = await this.userInputBonus();
+    const winningNumber = inputWinningNumber.getLotto();
+    const bonus = await this.userInputBonus();
     const lottoCount = this.getTicketsCount(money);
     const lottoTickets = this.makeLotto(lottoCount);
-    this.compareLottoNumber(lottoTickets);
+    this.compareLottoNumber(lottoTickets, winningNumber, bonus);
     const profit = this.calculateProfit();
     const rateOfProfit = this.calculateRateOfProfit(profit, money);
     this.printResult(lottoCount, lottoTickets, rateOfProfit);
@@ -48,9 +45,9 @@ class LottoMachine {
     return profit;
   }
 
-  compareLottoNumber(lottoTickets = []) {
+  compareLottoNumber(lottoTickets = [], winningNumber, bonus) {
     lottoTickets.forEach(lotto => {
-      const sameNumberCount = this.findSameNumber(this.#winningNumber, lotto.getLotto());
+      const sameNumberCount = this.findSameNumber(winningNumber, lotto.getLotto(), bonus);
       if (sameNumberCount === 6) {
         this.#winningResult[0] += 1;
       } else if (sameNumberCount === 5) {
@@ -63,17 +60,17 @@ class LottoMachine {
     })
   }
 
-  findSameNumber(winningLotto = [], buyLotto = []) {
+  findSameNumber(winningLotto = [], buyLotto = [], bonus) {
     const commonElements = winningLotto.filter(element => buyLotto.includes(element));
-    if (commonElements.length === 5 && this.checkBonusNumber(buyLotto)) {
+    if (commonElements.length === 5 && this.checkBonusNumber(buyLotto, bonus)) {
       commonElements.length += 2;
       this.#winningResult[1] += 1;
     }
     return commonElements.length;
   }
 
-  checkBonusNumber(lotto) {
-    if (lotto.includes(this.#bonus)) {
+  checkBonusNumber(lotto, bonus) {
+    if (lotto.includes(bonus)) {
       return true;
     }
     return false;
@@ -102,15 +99,8 @@ class LottoMachine {
 
   validateBonus(inputBonus = '') {
     this.validateIsEmpty(inputBonus);
-    this.validateDuplicateBonus(inputBonus);
     const bonus = Number(inputBonus);
     if (bonus < 1 || bonus > 45) {
-      throw new Error(ERROR.bonus);
-    }
-  }
-
-  validateDuplicateBonus(inputBonus = '') {
-    if (this.#winningNumber.includes(Number(inputBonus))) {
       throw new Error(ERROR.bonus);
     }
   }
