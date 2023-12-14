@@ -6,28 +6,63 @@ import Lotto from "./Lotto.js";
 
 class LottoMachine {
   #winningNumber;
+  #winningResult;
+  #bonus;
 
   constructor() {
     this.#winningNumber = [];
+    this.#winningResult = [0, 0, 0, 0, 0];
   }
 
   async start() {
     const money = await this.userInputMoney();
     this.#winningNumber = await this.userInputWinningNumber();
-    const bonusNumber = await this.userInputBonus();
+    this.#bonus = await this.userInputBonus();
     const lottoCount = this.getTicketsCount(money);
     const lottoTickets = this.makeLotto(lottoCount);
-
+    this.compareLottoNumber(lottoTickets);
     //console.log(money);
     //console.log(this.#winningNumber);
     //console.log(bonusNumber);
     //console.log(lottoCount);
     //console.log(lottoTickets);
+    console.log(this.#winningResult);
   }
 
-  makeLotto(lottoCount) {
+  compareLottoNumber(lottoTickets = []) {
+    lottoTickets.forEach(lotto => {
+      const sameNumberCount = this.findSameNumber(this.#winningNumber, lotto.getLotto());
+      if (sameNumberCount === 6) {
+        this.#winningResult[0] += 1;
+      } else if (sameNumberCount === 5) {
+        this.#winningResult[2] += 1;
+      } else if (sameNumberCount === 4) {
+        this.#winningResult[3] += 1;
+      } else if (sameNumberCount === 3) {
+        this.#winningResult[4] += 1;
+      }
+    })
+  }
+
+  findSameNumber(winningLotto = [], buyLotto = []) {
+    const commonElements = winningLotto.filter(element => buyLotto.includes(element));
+    if (commonElements.length === 5 && this.checkBonusNumber(buyLotto)) {
+      commonElements.length += 2;
+      this.#winningResult[1] += 1;
+    }
+    return commonElements.length;
+  }
+
+  checkBonusNumber(lotto) {
+    if (lotto.includes(this.#bonus)) {
+      return true;
+    }
+    return false;
+  }
+
+  makeLotto(lottoCount = 0) {
     const lottoTickets = [];
-    for( let i = 0; i < lottoCount; i += 1) {
+    for (let i = 0; i < lottoCount; i += 1) {
       const numbers = Random.pickUniqueNumbersInRange(1, 45, 6);
       lottoTickets.push(new Lotto(numbers));
     }
@@ -35,7 +70,7 @@ class LottoMachine {
   }
 
   async userInputBonus() {
-    while(true) {
+    while (true) {
       try {
         const inputBonus = await InputView.readBonusNumber();
         this.validateBonus(inputBonus);
